@@ -38,7 +38,7 @@ export default function StudentsPage() {
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search students…"
+        placeholder="Search students..."
         className="w-full rounded-xl border border-slate-200 px-4 py-2.5 mb-5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-300 transition"
       />
 
@@ -49,34 +49,6 @@ export default function StudentsPage() {
         onClose={() => setModalOpen(false)}
         onCreated={refetch}
       />
-    </div>
-  )
-}import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { StudentDetailHeader } from '@/components/students/StudentDetailHeader'
-import { StudentDetailTabs } from '@/components/students/StudentDetailTabs'
-
-export default async function StudentDetailPage({
-  params,
-}: {
-  params: Promise<{ studentId: string }>
-}) {
-  const { studentId } = await params
-  const supabase = await createClient()
-
-  const { data: student, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, email, phone, avatar_url, created_at')
-    .eq('id', studentId)
-    .eq('role', 'student')
-    .single()
-
-  if (error || !student) notFound()
-
-  return (
-    <div className="max-w-4xl mx-auto">
-      <StudentDetailHeader student={student} />
-      <StudentDetailTabs studentId={student.id} />
     </div>
   )
 }

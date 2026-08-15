@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { ScheduleManager } from '@/components/students/ScheduleManager'
 import { TodoManager } from '@/components/students/TodoManager'
 
-
 type Tab = 'overview' | 'schedule' | 'todos' | 'messages'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -38,18 +37,18 @@ export function StudentDetailTabs({ studentId }: { studentId: string }) {
       <div className="bg-white rounded-2xl border border-slate-100 p-6 min-h-[300px]">
         {active === 'overview' && (
           <p className="text-slate-400 text-sm">
-            Quick summary — upcoming sessions, pending to-dos, recent messages. (Wire up once
-            schedule/todo modules exist.)
+            Quick summary - upcoming sessions, pending to-dos, recent messages.
           </p>
         )}
         {active === 'schedule' && <ScheduleManager studentId={studentId} />}
         {active === 'todos' && <TodoManager studentId={studentId} />}
-        )}
         {active === 'messages' && (
-          <p className="text-slate-400 text-sm">
-            {/* <ChatWindow studentId={studentId} /> */}
-            Chat placeholder.
-          </p>
+          <a
+            href={`/admin/messages?student=${studentId}`}
+            className="inline-block bg-violet-300 hover:bg-violet-400 text-white text-sm font-medium rounded-xl px-4 py-2 transition"
+          >
+            Open conversation
+          </a>
         )}
       </div>
     </div>

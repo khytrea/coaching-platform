@@ -1,11 +1,19 @@
 'use client'
 
 import { useMemo, useCallback } from 'react'
-import { Calendar, Views, type SlotInfo, type View } from 'react-big-calendar'
+import { Calendar, Views, type SlotInfo } from 'react-big-calendar'
 import { localizer } from '@/lib/calendar/localizer'
 import type { ScheduleEvent } from '@/hooks/useSchedule'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import './calendar-overrides.css'
+
+type CalendarEventItem = {
+  id: string
+  title: string
+  start: Date
+  end: Date
+  resource: ScheduleEvent
+}
 
 type Props = {
   events: ScheduleEvent[]
@@ -14,7 +22,7 @@ type Props = {
 }
 
 export function CalendarView({ events, onSelectSlot, onSelectEvent }: Props) {
-  const calendarEvents = useMemo(
+  const calendarEvents = useMemo<CalendarEventItem[]>(
     () =>
       events.map((e) => ({
         id: e.id,
@@ -31,7 +39,7 @@ export function CalendarView({ events, onSelectSlot, onSelectEvent }: Props) {
     [onSelectSlot]
   )
 
-  const eventPropGetter = useCallback((event: { resource: ScheduleEvent }) => {
+  const eventPropGetter = useCallback((event: CalendarEventItem) => {
     return {
       style: {
         backgroundColor: event.resource.color || '#c4b5fd',
@@ -45,14 +53,14 @@ export function CalendarView({ events, onSelectSlot, onSelectEvent }: Props) {
       <Calendar
         localizer={localizer}
         events={calendarEvents}
-        startAccessor="start"
-        endAccessor="end"
+        startAccessor={(event: CalendarEventItem) => event.start}
+        endAccessor={(event: CalendarEventItem) => event.end}
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
         defaultView={Views.WEEK}
         selectable
         popup
         onSelectSlot={handleSelectSlot}
-        onSelectEvent={(e) => onSelectEvent(e.resource)}
+        onSelectEvent={(e: CalendarEventItem) => onSelectEvent(e.resource)}
         eventPropGetter={eventPropGetter}
         style={{ height: '100%' }}
       />
